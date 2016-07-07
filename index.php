@@ -2,28 +2,15 @@
 
 define("__ACCESS__", 1);
 
-$DEBUG_MODE = true;
-
-if($DEBUG_MODE){
-    error_reporting();
-}else {
-    error_reporting(0);
-}
+require 'api/base/framework.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require 'vendor/autoload.php';
-
-$DEBUG_ARR = [
-    'settings' => [
-        'displayErrorDetails' => true
-    ]
-];
+require 'controllers.php';
 
 $app =  $DEBUG_MODE ? new \Slim\App($DEBUG_ARR) : new \Slim\App;
-
-require 'controllers.php';
 
 /********************************USER****************************************/
 
@@ -32,7 +19,7 @@ require 'controllers.php';
 $app->post('/user/', function (Request $request, Response $response){
     $user = array();
     $user = $request->getParsedBody();
-    $response->getBody()->write(registerUser($user));
+    $response->getBody()->write(registerUser($user, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
@@ -48,7 +35,7 @@ $app->put('/user/details/{id}', function ($request, $response, $args){
     $userDetails = array();
     $userDetails = $request->getParsedBody();
     $id = $request->getAttribute('id');
-    $response->getBody()->write(updateUserDetails($id, $userDetails));
+    $response->getBody()->write(updateUserDetails($id, $userDetails, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
@@ -62,7 +49,7 @@ $app->put('/user/details/{id}', function ($request, $response, $args){
 
 $app->get('/user/{options}', function (Request $request, Response $response){
     $options = $request->getAttribute('options');
-    $response->getBody()->write(getUser($options));
+    $response->getBody()->write(getUser($options, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
@@ -70,13 +57,13 @@ $app->get('/user/{options}', function (Request $request, Response $response){
 $app->post('/tc/', function (Request $request, Response $response){
     $TCData = array();
     $TCData = $request->getParsedBody();
-    $response->getBody()->write(resgisterTC($TCData));
+    $response->getBody()->write(resgisterTC($TCData, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
 $app->get('/tc/{options}', function (Request $request, Response $response){
     $options = $request->getAttribute('options');
-    $response->getBody()->write(getTC($options));
+    $response->getBody()->write(getTC($options, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
@@ -85,7 +72,7 @@ $app->get('/tc/{options}', function (Request $request, Response $response){
 $app->post('/review/', function (Request $request, Response $response){
     $reviewData = array();
     $reviewData = $request->getParsedBody();
-    $response->getBody()->write(addReview($reviewData));
+    $response->getBody()->write(addReview($reviewData, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
@@ -94,7 +81,7 @@ $app->post('/review/', function (Request $request, Response $response){
 $app->post('/area/', function (Request $request, Response $response){
     $areaData = array();
     $areaData = $request->getParsedBody();
-    $response->getBody()->write(addArea($areaData));
+    $response->getBody()->write(addArea($areaData, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
@@ -103,7 +90,7 @@ $app->post('/area/', function (Request $request, Response $response){
 $app->post('/plan/', function (Request $request, Response $response){
     $areaData = array();
     $areaData = $request->getParsedBody();
-    $response->getBody()->write(addPlan($areaData));
+    $response->getBody()->write(addPlan($areaData, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
@@ -112,7 +99,7 @@ $app->post('/plan/', function (Request $request, Response $response){
 $app->post('/wallet/', function (Request $request, Response $response){
     $walletData = array();
     $walletData = $request->getParsedBody();
-    $response->getBody()->write(addPlan($walletData));
+    $response->getBody()->write(addPlan($walletData, $request->getHeaders()['HTTP_DEBUG'][0]));
     return $response;
 });
 
