@@ -8,6 +8,8 @@ class ValidationRegEx {
 						
 						,"email" 			=> null
 						
+						,"name" 		=> "/^[A-Za-z]{3,20}$/"
+						
 						,"username" 		=> "/^[A-Za-z][A-Za-z0-9]{5,31}$/"
 						/*Must start with letter, 6-32 characters, Letters and numbers only*/
 
@@ -30,5 +32,9 @@ class ValidationRegEx {
 						/*Min char 5, max char 120, only alphanumeric and spaces*/
 
 						,"searchTerm"		=> "/^[A-Za-z0-9 ]{3,25}$/"
+
+						,"mobile_number"	=> "/^[0-9]{10}$/"
+
+						,"boolean"			=> null
 					);
 }

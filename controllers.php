@@ -9,24 +9,25 @@ require_once 'api/utils.php';
  * Function will be responsible for regisering a user.
  * @param  array  $user This is the array of fields which will be stored in users DB table.
  * @return json   A json string which contains the response string, which will be sent to client.
+ * 21
  */
 function registerUser($user = array()){
     require_once 'api/requiredFields/registerUser.php';
     $u = new Utils();
     
     if (!empty($user)) {
-        $errorArr = $u->verifyRequiredParams(RegisterUserReqFields::arr, $user);
+        $errorArr = $u->verifyRequiredParams(RegisterUserReqFields::add, $user);
         if(!empty($errorArr)){
             return $u->getJSONResponse($errorArr, true, 1);
         }else {
-            $userNumber = $u->createUser($user, true);
+            $userNumber = $u->createUser($user, true, true);
             if($userNumber){
                 if(!$u->createUserWallet($userNumber)){
                     return $u->getJSONResponse(null, true, 2);
                 }
                 return $u->getJSONResponse();
             }
-                return $u->getJSONResponse(null, true, 2);
+                return $u->getJSONResponse(null, true, 9);
         }
     }
     return $u->getJSONResponse(null, true, 3);
@@ -41,14 +42,13 @@ function resgisterTC($TCData = array()){
     $u = new Utils();
     
     if (!empty($TCData)) {
-        $errorArr = $u->verifyRequiredParams(RegisterTCReqFields::arr, $TCData);
+        $errorArr = $u->verifyRequiredParams(RegisterTCReqFields::add, $TCData);
         if(!empty($errorArr)){
             return $u->getJSONResponse($errorArr, true, 7);
         }else if(!$u->createTC($TCData)){
             return $u->getJSONResponse(null, true, 8);
-        }else{
-            return $u->getJSONResponse();
         }
+        return $u->getJSONResponse();
     }
     return $u->getJSONResponse(null, true, 6);
     
@@ -63,14 +63,13 @@ function addReview($reviewData = array()){
     require_once 'api/requiredFields/addReview.php';
     $u = new Utils();
     if (!empty($reviewData)) {
-        $errorArr = $u->verifyRequiredParams(AddReviewReqFields::arr, $reviewData);
+        $errorArr = $u->verifyRequiredParams(AddReviewReqFields::add, $reviewData);
         if(!empty($errorArr)){
             return $u->getJSONResponse($errorArr, true, 13);
         }else if(!$u->addReview($reviewData)){
             return $u->getJSONResponse(null, true, 14);
-        }else{
-            return $u->getJSONResponse();
         }
+        return $u->getJSONResponse();
     }
     return $u->getJSONResponse(null, true, 15);
 }
@@ -92,7 +91,7 @@ function addArea($areaData = array()){
     $tcID = $areaData['tc_id'];
     if (!empty($areaData)){
         if(!empty($areaData['area_name']) || !empty($areaData['city_id'])){
-            $errorArr = $u->verifyRequiredParams(AddAreaReqFields::arr, $areaData);
+            $errorArr = $u->verifyRequiredParams(AddAreaReqFields::add, $areaData);
             if(!empty($errorArr)){
                 return $u->getJSONResponse($errorArr, true, 16);
             }
@@ -129,24 +128,34 @@ function addArea($areaData = array()){
 }
 
 function addPlan($planData = array()){
-    require_once 'api/requiredFields/addReview.php';
+    require_once 'api/requiredFields/addPlan.php';
     $u = new Utils();
-    if (!empty($planData)) {
-        $errorArr = $u->verifyRequiredParams(AddPlanReqFields::arr, $planData);
+    if (!empty($planData)){
+        $errorArr = $u->verifyRequiredParams(AddPlanReqFields::add, $planData);
         if(!empty($errorArr)){
             return $u->getJSONResponse($errorArr, true, 24);
         }else if(!$u->addReview($planData)){
             return $u->getJSONResponse(null, true, 25);
-        }else{
-            return $u->getJSONResponse();
         }
+        return $u->getJSONResponse();
     }
     return $u->getJSONResponse(null, true, 26);
 }
 
-
-function updateUserDetails($userDetails = array()){
-    
+function updateUserDetails($userNumber = 0, $userDetails = array()){
+    require_once 'api/requiredFields/updateUserDetails.php';
+    $u = new Utils();
+    if(!empty($userNumber) && !empty($userDetails)){
+        $userDetails['user_number'] = $userNumber;
+        $errorArr = $u->verifyRequiredParams(UpdateUserDetailsReqFields::edit, $userDetails);
+        if(!empty($errorArr)){
+            return $u->getJSONResponse($errorArr, true, 19);
+        } else if(!$u->updateUserDetails($userDetails, true)){
+            return $u->getJSONResponse(null, true, 20);
+        }
+        return $u->getJSONResponse();
+    }
+    return $u->getJSONResponse(null, true, 10);
 }
 
 /**
@@ -160,9 +169,9 @@ function getUser($options = null){
     $u = new Utils();
     $optionsArr = array();
     parse_str($options, $optionsArr);
-
+    
     if(!empty($optionsArr)){
-        $errorArr = $u->verifyRequiredParams(GetUserReqFields::arr, $optionsArr);
+        $errorArr = $u->verifyRequiredParams(GetUserReqFields::get, $optionsArr);
         if(!empty($errorArr))
             return $u->getJSONResponse($errorArr, true, 4);
     }
@@ -185,7 +194,7 @@ function getTC($options = null){
     $optionsArr = array();
     parse_str($options, $optionsArr);
     if($options !== null){
-        $errorArr = $u->verifyRequiredParams(GetTCReqFields::arr, $optionsArr);
+        $errorArr = $u->verifyRequiredParams(GetTCReqFields::get, $optionsArr);
         if(!empty($errorArr))
             return $u->getJSONResponse($errorArr, true, 11);
     }

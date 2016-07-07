@@ -2,7 +2,7 @@
 
 defined("__ACCESS__") or die ("Direct Access Not Allowed !");
 
-class AddAreaReqFields
+class AddPlanReqFields
 {
 	const add = array(
         /*fieldName=>array(mandatory, fieldType)*/

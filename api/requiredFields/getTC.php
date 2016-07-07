@@ -4,7 +4,7 @@ defined("__ACCESS__") or die ("Direct Access Not Allowed !");
 
 class GetTCReqFields
 {
-	const arr = array(
+	const get = array(
         /*fieldName=>array(mandatory, fieldType)*/
         "TCID"		=>	array("mandatory"=>false, "type"=>"int")
        ,"areaID"	=>	array("mandatory"=>true, "type"=>"int")

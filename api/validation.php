@@ -27,6 +27,9 @@ class Validations {
 			case 'int':
 				$return = filter_var($fieldValue, FILTER_VALIDATE_INT) == $fieldValue;
 				break;
+			case 'boolean':
+				$return = filter_var($fieldValue, FILTER_VALIDATE_BOOLEAN) == $fieldValue;
+				break;
 			default:
 				$return = filter_var($fieldValue, FILTER_CALLBACK, array('options'=> 'self::typeNotFoundCallback')) == $fieldValue;
 				break;

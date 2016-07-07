@@ -4,7 +4,7 @@ defined("__ACCESS__") or die ("Direct Access Not Allowed !");
 
 class RegisterTCReqFields
 {
-	const arr = array(
+	const add = array(
         /*fieldName=>array(mandatory, fieldType)*/
         "user_number"	=>array("mandatory"=>true, "type"=>"int") 
     	,"tc_name"		=>array("mandatory"=>true, "type"=>"tc_name")

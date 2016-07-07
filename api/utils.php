@@ -14,7 +14,6 @@ class Utils extends DBBasic
         if(!empty($responseData)){
             $response["responseData"] = $responseData;
         }
-        
         return json_encode($response);
     }
     
@@ -23,6 +22,11 @@ class Utils extends DBBasic
      */
     public function verifyRequiredParams($requiredFields = array(), $requestData = array()) {
         $error_fields = array();
+
+        if(count(array_diff_key($requiredFields, $requestData)) === count($requiredFields)){
+            $keys = array_keys($requestData);
+            return array(implode(',', $keys) => 'unwanted filters, no correct filter found!');
+        }
         
         foreach ($requiredFields as $field=>$attr) {
             //check if the field is empty but was mandatory

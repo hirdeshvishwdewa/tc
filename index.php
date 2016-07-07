@@ -3,9 +3,8 @@
 define("__ACCESS__", 1);
 
 $DEBUG_MODE = true;
-$ERROR_REPORTING = false;
 
-if($ERROR_REPORTING){
+if($DEBUG_MODE){
     error_reporting();
 }else {
     error_reporting(0);
@@ -37,12 +36,29 @@ $app->post('/user/', function (Request $request, Response $response){
     return $response;
 });
 
-$app->put('/user/', function (Request $request, Response $response){
+// $app->put('/user/address/{id}', function (Request $request, Response $response){
+//     $addressDetails = array();
+//     $addressDetails = $request->getParsedBody();
+//     $id = $request->getAttribute('id');
+//     $response->getBody()->write(updateUserAddress($id, $addressDetails));
+//     return $response;
+// });
+
+$app->put('/user/details/{id}', function ($request, $response, $args){
     $userDetails = array();
     $userDetails = $request->getParsedBody();
-    $response->getBody()->write(updateUserDetails($userDetails));
+    $id = $request->getAttribute('id');
+    $response->getBody()->write(updateUserDetails($id, $userDetails));
     return $response;
 });
+
+// $app->put('/user/password/{id}', function (Request $request, Response $response){
+//     $userDetails = array();
+//     $userDetails = $request->getParsedBody();
+//     $id = $request->getAttribute('id');
+//     $response->getBody()->write(updateUserDetails($id, $userDetails));
+//     return $response;
+// });
 
 $app->get('/user/{options}', function (Request $request, Response $response){
     $options = $request->getAttribute('options');

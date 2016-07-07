@@ -4,7 +4,7 @@ defined("__ACCESS__") or die ("Direct Access Not Allowed !");
 
 class GetUserReqFields
 {
-	const arr = array(
+	const get = array(
         /*fieldName=>array(mandatory, fieldType)*/
         "userNumber"	=>	array("mandatory"=>	false, 	"type"=>"int")
        ,"order"			=>	array("mandatory"=>	false, 	"type"=>"order")

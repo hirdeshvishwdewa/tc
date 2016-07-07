@@ -4,7 +4,7 @@ defined("__ACCESS__") or die ("Direct Access Not Allowed !");
 
 class AddReviewReqFields
 {
-	const arr = array(
+	const add = array(
         /*fieldName=>array(mandatory, fieldType)*/
         "tc_id"			=>	array("mandatory"=>true, "type"=>"int")
        ,"user_number"	=>	array("mandatory"=>true, "type"=>"int")

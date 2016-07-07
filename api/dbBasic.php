@@ -12,39 +12,39 @@ class DBBasic {
 	}
 
 	/**********************************CREATE FUNCTIONS*******************************************/
-	public function createUser($userData = array(), $returnInsertID = false){
+	public function createUser($userData = array(), $returnInsertID = false, $debug = false){
 		$userExtras = array("#created_at"=>"NOW()", "#last_modified"=>"NOW()");
 		$userData = array_merge($userData, $userExtras);
-        return $this->insertData('users', $userData, $returnInsertID);
+        return $this->insert('users', $userData, $returnInsertID, $debug);
     }
 
-    public function createTC($TCData = array(), $returnInsertID = false){
+    public function createTC($TCData = array(), $returnInsertID = false, $debug = false){
 		$TCExtras = array("#created_at"=>"NOW()", "#last_modified"=>"NOW()");
 		$TCData = array_merge($TCData, $TCExtras);
-		return $this->insertData('tc_master', $TCData, $returnInsertID);
+		return $this->insert('tc_master', $TCData, $returnInsertID, $debug);
     }
 
     public function addReview($reviewData = array(), $returnInsertID = false){
         $reviewExtras = array("#created_at"=>"NOW()", "#last_modified"=>"NOW()");
         $reviewData = array_merge($reviewData, $reviewExtras);
-        return $this->insertData('tc_reviews', $reviewData, $returnInsertID);
+        return $this->insert('tc_reviews', $reviewData, $returnInsertID);
     }
 
     public function addArea($areaData = array(), $returnInsertID = false){
         $areaExtras = array("#created_at"=>"NOW()", "#last_modified"=>"NOW()");
         $areaData = array_merge($areaData, $areaExtras);
-        return $this->insertData('areas', $areaData, $returnInsertID);
+        return $this->insert('areas', $areaData, $returnInsertID);
     }
 
     public function addAreaToTC($data = array(), $returnInsertID = false){
         $extras = array("#created_at"=>"NOW()", "#last_modified"=>"NOW()");
         $areaData = array_merge($data, $extras);
-        return $this->insertData('tc_area_map', $areaData, $returnInsertID);
+        return $this->insert('tc_area_map', $areaData, $returnInsertID);
     }
 
     public function createUserWallet($userNumber, $returnInsertID = false){
     	$data = array('user_number'=>$userNumber, '#last_modified'=>'NOW()');
-        return $this->insertData('user_wallet', $data, $returnInsertID);
+        return $this->insert('user_wallet', $data, $returnInsertID);
     }
 
     public function createAddress($userNumber, $returnInsertID = false){
@@ -53,8 +53,14 @@ class DBBasic {
 
     /**********************************UPDATE FUNCTIONS*******************************************/
 
-    public function updateUserDetails($userNumber){
-    	
+    public function updateUserDetails($userData, $debug = false){
+        $userNumber = $userData['user_number'];
+        unset($userData['user_number']);
+        $data = array();
+        $data['tableName']  = "user_details";
+        $data['data']       = $userData;
+        $data['where']      = array('user_number[=]' => $userNumber);
+        return $this->update($data, $debug);
     }
 
 	/**********************************SELECT FUNCTIONS*******************************************/
@@ -103,7 +109,7 @@ class DBBasic {
         $data['join']       = $join;
         $data['selectFields'] = $select;
         $data['where'] = $where;
-        return $this->selectData($data, $debug);
+        return $this->select($data, $debug);
     }
 
     public function getTC($options = array()){
@@ -143,7 +149,7 @@ class DBBasic {
             $data['tableName']      = "tc_area_map";
             $data['selectFields']   = "tc_area_map.tc_id";
             $data['where']          = array("tc_area_map.area_id[=]" => $options['areaID']);
-            $where['tc_master.tc_id[=]'] = $this->selectData($data);
+            $where['tc_master.tc_id[=]'] = $this->select($data);
 
         }else if(isset($options['cityID']) && $options['cityID'] !== null){
             $join['[>]tc_area_map'] = array("tc_area_map.area_id", "areas.area_id");
@@ -160,17 +166,17 @@ class DBBasic {
         $data['join']       = $join;
         $data['selectFields'] = $select;
         $data['where'] = $where;
-        return $this->selectData($data);
+        return $this->select($data);
     }
 
-    private function insertData($tableName, $data, $returnInsertID = false, $debug = false){
+    private function insert($tableName, $data, $returnInsertID = false, $debug = false){
         $medoo = new medoo($this->db);
         if($debug)  $medoo->debug();
         $id = $medoo->insert($tableName, $data);
         return $id > 0 ? $returnInsertID === true ? $id : true : false;
     }
 
-    private function selectData($data, $debug){
+    private function select($data, $debug){
         $medoo = new medoo($this->db);
         if($debug)  $medoo->debug();
         return isset($data['join']) 
@@ -179,6 +185,13 @@ class DBBasic {
                 :
                 $medoo->select($data['tableName'], $data['selectFields'], $data['where'])
                 ;
+    }
+
+    private function update($data, $debug){
+        $medoo = new medoo($this->db);
+        if($debug)  $medoo->debug();
+        //var_dump($medoo->update($data['tableName'], $data['data'], $data['where']));
+        return  $medoo->update($data['tableName'], $data['data'], $data['where']) >= 1;
     }
 
 }
