@@ -2,7 +2,7 @@
 
 define("__ACCESS__", 1);
 
-require 'api/base/framework.php';
+require 'api/base/base.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -23,13 +23,13 @@ $app->post('/user/', function (Request $request, Response $response){
     return $response;
 });
 
-// $app->put('/user/address/{id}', function (Request $request, Response $response){
-//     $addressDetails = array();
-//     $addressDetails = $request->getParsedBody();
-//     $id = $request->getAttribute('id');
-//     $response->getBody()->write(updateUserAddress($id, $addressDetails));
-//     return $response;
-// });
+$app->put('/user/address/{id}', function (Request $request, Response $response){
+    $addressDetails = array();
+    $addressDetails = $request->getParsedBody();
+    $id = $request->getAttribute('id');
+    $response->getBody()->write(updateUserAddress($id, $addressDetails));
+    return $response;
+});
 
 $app->put('/user/details/{id}', function ($request, $response, $args){
     $userDetails = array();

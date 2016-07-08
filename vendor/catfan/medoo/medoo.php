@@ -819,7 +819,7 @@ class medoo
 		return count($lastId) > 1 ? $lastId : $lastId[ 0 ];
 	}
 
-	public function update($table, $data, $where = null)
+	public function update($table, $data, $where = null, $prepared = false)
 	{
 		$fields = array();
 
@@ -865,7 +865,31 @@ class medoo
 			}
 		}
 
-		return $this->exec('UPDATE ' . $this->table_quote($table) . ' SET ' . implode(', ', $fields) . $this->where_clause($where));
+		return $prepared ? $this->update_prepared($table, $fields, $where) : $this->exec('UPDATE ' . $this->table_quote($table) . ' SET ' . implode(', ', $fields) . $this->where_clause($where));
+	}
+
+	private function update_prepared($table, $fields, $where){
+		foreach ($fields as $value) {
+			$key = explode(" = ", $value);
+			$key = $key[0];
+			$val = $key[1];
+			$col .= '`'.$key.'` = :'.$key.',';
+		}
+		$col = rtrim($col,',');
+		$sql = "UPDATE ".$this->table_quote($table)." SET " . $col . $this->where_clause($where);
+		try {
+			$statement = $this->pdo->prepare($sql);
+			foreach ($fields as $value) {
+				$key1 = explode(" = ", $value);
+				$key = $key1[0];
+				$val = trim($key1[1], "'");
+				$statement->bindValue(":" . $key, $val);
+			}
+			return $statement->execute();
+		}
+		catch(PDOException $e) {
+			return false;
+		}
 	}
 
 	public function delete($table, $where)

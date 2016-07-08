@@ -1,4 +1,5 @@
 <?php
+	defined("__ACCESS__") or die ("Direct Access Not Allowed !");
 	$DEBUG_MODE = false;
 
 	if($DEBUG_MODE){
@@ -19,4 +20,3 @@
 			var_dump($value);
 		}
 	}
-?>

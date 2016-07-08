@@ -69,7 +69,8 @@ class DBBasic {
         $data = array();
         $data['tableName']  = "user_details";
         $data['data']       = $userData;
-        $data['where']      = array('user_number[=]' => $userNumber);   
+        $data['where']      = array('user_number[=]' => $userNumber);
+
         return $this->update($data, $debug);
     }
 
@@ -201,9 +202,7 @@ class DBBasic {
     private function update($data, $debug){
         $medoo = new medoo($this->db);
         if($debug)  $medoo->debug();
-        //dump($medoo->update($data['tableName'], $data['data'], $data['where']));
-
-        return  $medoo->update($data['tableName'], $data['data'], $data['where']) >= 1;
+        return  $medoo->update($data['tableName'], $data['data'], $data['where'], true);
     }
 
 }
