@@ -29,10 +29,10 @@ function registerUser($user = array(), $debug = false){
             }
             $userNumber = $u->createUser($user, true, $debug);
             if($userNumber){
-                if(!$u->createUserWallet($userNumber, $debug)){
+                if(!$u->createUserWallet($userNumber, false, $debug)){
                     return $u->getJSONResponse(null, true, 2);
                 }
-                if(!$u->initUserDetails($userNumber, $debug)){
+                if(!$u->initUserDetails($userNumber, false, $debug)){
                     return $u->getJSONResponse(null, true, 21);
                 }
                 return $u->getJSONResponse();
@@ -55,7 +55,7 @@ function resgisterTC($TCData = array(), $debug = false){
         $errorArr = $u->verifyRequiredParams(RegisterTCReqFields::add, $TCData);
         if(!empty($errorArr)){
             return $u->getJSONResponse($errorArr, true, 7);
-        }else if(!$u->createTC($TCData, $debug)){
+        }else if(!$u->createTC($TCData, false, $debug)){
             return $u->getJSONResponse(null, true, 8);
         }
         return $u->getJSONResponse();
@@ -76,7 +76,7 @@ function addReview($reviewData = array(), $debug = false){
         $errorArr = $u->verifyRequiredParams(AddReviewReqFields::add, $reviewData);
         if(!empty($errorArr)){
             return $u->getJSONResponse($errorArr, true, 13);
-        }else if(!$u->addReview($reviewData, $debug)){
+        }else if(!$u->addReview($reviewData, false, $debug)){
             return $u->getJSONResponse(null, true, 14);
         }
         return $u->getJSONResponse();
@@ -128,7 +128,7 @@ function addArea($areaData = array(), $debug = false){
             unset($areaData['area_name']);
             unset($areaData['city_id']);
             
-            if(!$u->addAreaToTC($areaData, $debug))
+            if(!$u->addAreaToTC($areaData, false, $debug))
                 return $u->getJSONResponse($errorArr, true, 23);
         }
         return $u->getJSONResponse();
@@ -144,7 +144,7 @@ function addPlan($planData = array(), $debug = false){
         $errorArr = $u->verifyRequiredParams(AddPlanReqFields::add, $planData);
         if(!empty($errorArr)){
             return $u->getJSONResponse($errorArr, true, 24);
-        }else if(!$u->addReview($planData, $debug)){
+        }else if(!$u->addReview($planData, false, $debug)){
             return $u->getJSONResponse(null, true, 25);
         }
         return $u->getJSONResponse();
@@ -168,7 +168,22 @@ function updateUserDetails($userNumber = 0, $userDetails = array(), $debug = fal
     }
     return $u->getJSONResponse(null, true, 10);
 }
+function updateUserAddress($addressID, $addressDetails = array(), $debug = false){
+    require_once 'api/requiredFields/updateUserAddress.php';
+    $u = new Utils();
 
+    if(!empty($addressID) && !empty($addressDetails)){
+        $addressDetails['address_id'] = $addressID;
+        $errorArr = $u->verifyRequiredParams(UpdateUserAddressReqFields::edit, $addressDetails);
+        if(!empty($errorArr)){
+            return $u->getJSONResponse($errorArr, true, 29);
+        } else if(!$u->updateUserAddress($addressDetails, $debug)){
+            return $u->getJSONResponse(null, true, 30);
+        }
+        return $u->getJSONResponse();
+    }
+    return $u->getJSONResponse(null, true, 28);
+}
 /**
  * This function will return the users depending upon the options.
  * $options will be a query sting contains filters for giving conditions.

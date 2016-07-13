@@ -8,7 +8,7 @@ class ValidationRegEx {
 						
 						,"email" 			=> null
 						
-						,"name" 		=> "/^[A-Za-z]{3,20}$/"
+						,"name" 			=> "/^[A-Za-z]{3,20}$/"
 						
 						,"username" 		=> "/^[A-Za-z][A-Za-z0-9]{5,31}$/"
 						/*Must start with letter, 6-32 characters, Letters and numbers only*/
@@ -36,5 +36,13 @@ class ValidationRegEx {
 						,"mobile_number"	=> "/^[0-9]{10}$/"
 
 						,"boolean"			=> null
+
+						,"pincode"			=> "/^[0-9]{6}$/"
+
+						,"house_no"			=> "/^[A-Za-z0-9 -\/]{1,10}$/"
+
+						,"building_name"	=> "/^[A-Za-z0-9 ]{1,25}$/"
+
+						,"street_name"		=> "/^[A-Za-z0-9 ]{1,30}$/"
 					);
 }

@@ -73,7 +73,15 @@ class DBBasic {
 
         return $this->update($data, $debug);
     }
-
+    
+    public function updateUserAddress($addressData, $debug = false){
+        $addressID = $addressData['address_id'];
+        $data = array();
+        $data['tableName']  = "user_addresses";
+        $data['data']       = $addressData;
+        return $this->replaceinto($data, $debug);
+    }
+    
 	/**********************************SELECT FUNCTIONS*******************************************/
     public function getUser($options = array(), $debug = false){
         //Give specific user
@@ -128,7 +136,7 @@ class DBBasic {
 
     public function getTC($options = array(), $debug = false){
         $medoo = new medoo($this->db);
-        
+
         $select = array(
                         "tc_master.tc_name"
                         ,"tc_master.tc_id"
@@ -185,9 +193,14 @@ class DBBasic {
     private function insert($tableName, $data, $returnInsertID = false, $debug = false){
         $medoo = new medoo($this->db);
         if($debug)  $medoo->debug();
-
         $id = $medoo->insert($tableName, $data);
         return $id > 0 ? $returnInsertID === true ? $id : true : false;
+    }
+
+    private function replaceinto($data, $debug = false){
+        $medoo = new medoo($this->db);
+        if($debug)  $medoo->debug();
+        return $medoo->replaceinto($data['tableName'], $data['data']);
     }
 
     private function select($data, $debug){

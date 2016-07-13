@@ -39,14 +39,6 @@ $app->put('/user/details/{id}', function ($request, $response, $args){
     return $response;
 });
 
-// $app->put('/user/password/{id}', function (Request $request, Response $response){
-//     $userDetails = array();
-//     $userDetails = $request->getParsedBody();
-//     $id = $request->getAttribute('id');
-//     $response->getBody()->write(updateUserDetails($id, $userDetails));
-//     return $response;
-// });
-
 $app->get('/user/{options}', function (Request $request, Response $response){
     $options = $request->getAttribute('options');
     $response->getBody()->write(getUser($options, $request->getHeaders()['HTTP_DEBUG'][0]));
