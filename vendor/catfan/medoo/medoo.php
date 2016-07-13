@@ -428,7 +428,7 @@ class medoo
 			$where_OR = preg_grep("/^OR\s*#?$/i", $where_keys);
 
 			$single_condition = array_diff_key($where, array_flip(
-				array('AND', 'OR', 'GROUP', 'ORDER', 'HAVING', 'LIMIT', 'LIKE', 'MATCH')
+				array('AND', 'OR', 'GROUP', 'ORDER', 'HAVING', 'LIMIT', 'LIKE', 'MATCH', 'OFFSET')
 			));
 
 			if ($single_condition != array())
@@ -506,30 +506,26 @@ class medoo
 			}
 
 			if (isset($where[ 'LIMIT' ]))
-			{
-				$LIMIT = $where[ 'LIMIT' ];
-
-				if (is_numeric($LIMIT))
-				{
-					$where_clause .= ' LIMIT ' . $LIMIT;
-				}
-
-				if (
-					is_array($LIMIT) &&
-					is_numeric($LIMIT[ 0 ]) &&
-					is_numeric($LIMIT[ 1 ])
-				)
-				{
-					if ($this->database_type === 'pgsql')
-					{
-						$where_clause .= ' OFFSET ' . $LIMIT[ 0 ] . ' LIMIT ' . $LIMIT[ 1 ];
-					}
-					else
-					{
-						$where_clause .= ' LIMIT ' . $LIMIT[ 0 ] . ',' . $LIMIT[ 1 ];
-					}
-				}
-			}
+            {
+                $LIMIT = $where[ 'LIMIT' ];
+                if (is_numeric($LIMIT))
+                {
+                    if(isset($where[ 'OFFSET'])){
+                        $OFFSET = $where[ 'OFFSET'];
+                        if (is_numeric($OFFSET))
+                        {
+                            if ($this->database_type === 'pgsql'){
+                                $where_clause .= ' OFFSET ' . $LIMIT . ' LIMIT ' . $OFFSET  ;
+                            }
+                            else{
+                                $where_clause .= ' LIMIT ' . $OFFSET . ', ' . $LIMIT;
+                            }
+                        }
+                    }else{
+                        $where_clause .= ' LIMIT ' . $LIMIT;
+                    }
+                }
+            }
 		}
 		else
 		{

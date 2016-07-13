@@ -155,6 +155,7 @@ function addPlan($planData = array(), $debug = false){
 function updateUserDetails($userNumber = 0, $userDetails = array(), $debug = false){
     require_once 'api/requiredFields/updateUserDetails.php';
     $u = new Utils();
+
     if(!empty($userNumber) && !empty($userDetails)){
         $userDetails['user_number'] = $userNumber;
         $errorArr = $u->verifyRequiredParams(UpdateUserDetailsReqFields::edit, $userDetails);

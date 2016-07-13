@@ -96,18 +96,21 @@ class DBBasic {
                        ,"[>]user_wallet" => "user_number"
         			);
 
-        /*If userNumber = null then we will return list of latest users*/
+        /*If userNumber = null then we will check for other options*/
         if($options['userNumber'] !== null)
             $where["OR"] = array('user_number[=]'=>$options['userNumber']);
         
-        if($options['limit'] !== null){
-        	$where["LIMIT"] = $options['limit'];
-        }
-        if($options['offset'] !== null)
-        	$where["OFFSET"] = $options['offset'];
-
-        if($options['order'] !== null)
+        if($options['order'] !== null){
         	$where['ORDER'] = "users.user_number ".$options['order'];
+            $where["LIMIT"] = 10;
+            $where["OFFSET"]= 0;
+        }
+
+        if($options['limit'] !== null)
+            $where["LIMIT"] = $options['limit'];
+        
+        if($options['offset'] !== null)
+            $where["OFFSET"] = $options['offset'];
 
         if($options['searchTerm'] !== null){
         	$where["OR"] = array(
@@ -125,7 +128,6 @@ class DBBasic {
 
     public function getTC($options = array(), $debug = false){
         $medoo = new medoo($this->db);
-        //$medoo->debug();
         
         $select = array(
                         "tc_master.tc_name"
