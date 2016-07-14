@@ -9,7 +9,7 @@ class DBConfig {
     'database_name' => 'tc',
     'server' => 'localhost',
     'username' => 'root',
-    'password' => '',
+    'password' => '1208#Ird@m',
     'charset' => 'utf8'
     );
 }
